@@ -1,9 +1,5 @@
 """TBA"""
-
-try:
-    from .package.autocli import Argumint, ArgStructBuilder, EndPoint
-except ImportError:
-    from package.autocli import Argumint, ArgStructBuilder, EndPoint
+from argumint import Interface
 
 import subprocess
 import inspect
@@ -62,7 +58,7 @@ def _cli():
 
         for test in tests:
             _debug("Running tests...")
-            test = os.path.join("aplustools", test)
+            test = os.path.join("chronix", test)
             if not minimal:
                 result = subprocess.run(
                     [
@@ -87,38 +83,11 @@ def _cli():
                 _debug(f"Tests passed for {test}.")
         _debug("Tests completed.")
 
-    builder = ArgStructBuilder()
-    builder.add_command("chronix")
-    builder.add_nested_command("chronix", "tests", "run")
-    builder.add_subcommand("chronix", "help")
-
-    arg_struct = builder.get_structure()
-
-    argu_mint = Argumint(
-        EndPoint(lambda: print("Not implemented yet, sorry.")), arg_struct=arg_struct
-    )
-    argu_mint.add_endpoint("chronix.tests.run", EndPoint(_run_tests))
-    argu_mint.add_endpoint(
-        "chronix.help",
-        EndPoint(
-            lambda: print(
-                "chronix --> tests -> run {tests} {-debug} {-minimal}\n    |\n     -> help"
-            )
-        ),
-    )
-    argu_mint.add_endpoint(
-        "chronix",
-        EndPoint(
-            lambda: print(
-                "This command doesn't work like that, please use it like this:\n"
-                "chronix --> tests -> run {tests} {-debug} {-minimal}\n    |\n     -> help"
-            )
-        ),
-    )
-
-    sys.argv[0] = "chronix"
-
-    argu_mint.parse_cli(sys, "native_light")
+    parser = Interface("chronix")
+    parser.path("tests.run", _run_tests)
+    parser.path("help", lambda: print("Please use this command like this:\nchronix --> tests -> run {tests} "
+                                      "{-debug} {-minimal}\n    |\n     -> help"))
+    parser.parse_cli()
 
 
 if __name__ == "__main__":

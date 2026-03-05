@@ -6,7 +6,7 @@
 
 # chronix
 
-chronix is a small timer utility that has all the helpful features you could ever want.
+chronix is every concept timer you've ever seen, rolled into one. It has all the helpful features you could ever want.
 
 ## Compatibility
 🟩 (Works perfectly); 🟨 (Untested); 🟧 (Some Issues); 🟥 (Unusable)

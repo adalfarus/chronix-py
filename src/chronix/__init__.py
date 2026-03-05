@@ -20,7 +20,7 @@ if _ty.TYPE_CHECKING:
     import _typeshed as _tsh
 import types as _ts
 
-__version__ = "2.0.0.3"
+__version__ = "2.0.0.4"
 __deps__: list[str] = []
 
 
@@ -1164,6 +1164,10 @@ class FlexTimer:
                 self._times[index] = (start, end_time, 0, lock)
         return self
 
+    @_ty.overload
+    def get(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> list[_timedelta] | _timedelta: ...
+    @_ty.overload
+    def get(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> list[PreciseTimeDelta] | PreciseTimeDelta: ...
     def get(
         self,
         *indices: int | None,
@@ -1202,6 +1206,10 @@ class FlexTimer:
                 returns.append(_timedelta(microseconds=elapsed_time / 1000))
         return returns if len(returns) > 1 else returns[0]
 
+    @_ty.overload
+    def delete(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> list[_timedelta] | _timedelta: ...
+    @_ty.overload
+    def delete(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> list[PreciseTimeDelta] | PreciseTimeDelta: ...
     def delete(
         self,
         *indices: int | None,
@@ -1247,6 +1255,10 @@ class FlexTimer:
             return returns if len(returns) > 1 else returns[0]
         return self
 
+    @_ty.overload
+    def end(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> list[_timedelta] | _timedelta: ...
+    @_ty.overload
+    def end(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> list[PreciseTimeDelta] | PreciseTimeDelta: ...
     def end(
         self,
         *indices: int | None,
@@ -1289,6 +1301,10 @@ class FlexTimer:
             return returns if len(returns) > 1 else returns[0]
         return self
 
+    @_ty.overload
+    def restart(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> list[_timedelta] | _timedelta: ...
+    @_ty.overload
+    def restart(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> list[PreciseTimeDelta] | PreciseTimeDelta: ...
     def restart(
         self,
         *indices: int | None,
@@ -1335,6 +1351,10 @@ class FlexTimer:
             return returns if len(returns) > 1 else returns[0]
         return self
 
+    @_ty.overload
+    def elapsed(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> list[_timedelta] | _timedelta: ...
+    @_ty.overload
+    def elapsed(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> list[PreciseTimeDelta] | PreciseTimeDelta: ...
     def elapsed(
         self,
         *indices: int | None,
@@ -1376,6 +1396,10 @@ class FlexTimer:
             return returns if len(returns) > 1 else returns[0]
         return self
 
+    @_ty.overload
+    def lap(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> list[_timedelta] | _timedelta: ...
+    @_ty.overload
+    def lap(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> list[PreciseTimeDelta] | PreciseTimeDelta: ...
     def lap(
         self,
         *indices: int | None,
@@ -1422,6 +1446,10 @@ class FlexTimer:
             return returns if len(returns) > 1 else returns[0]
         return self
 
+    @_ty.overload
+    def tally(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> _timedelta: ...
+    @_ty.overload
+    def tally(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> PreciseTimeDelta: ...
     def tally(
         self,
         *indices: int | None,
@@ -1460,6 +1488,10 @@ class FlexTimer:
             else _timedelta(microseconds=total_time / 1000)
         )
 
+    @_ty.overload
+    def average(self, *indices: int | None, return_type: _ty.Literal["timedelta"]) -> _timedelta: ...
+    @_ty.overload
+    def average(self, *indices: int | None, return_type: _ty.Literal["PreciseTimeDelta"]) -> PreciseTimeDelta: ...
     def average(
         self,
         *indices: int | None,
@@ -2274,6 +2306,12 @@ class FlexTimer:
         return self
 
     @classmethod
+    @_ty.overload
+    def test_delay(cls, amount: _TimeType, return_type: _ty.Literal["timedelta"]) -> _timedelta: ...
+    @classmethod
+    @_ty.overload
+    def test_delay(cls, amount: _TimeType, return_type: _ty.Literal["PreciseTimeDelta"]) -> PreciseTimeDelta: ...
+    @classmethod
     def test_delay(
         cls,
         amount: _TimeType = 0,
@@ -2294,6 +2332,12 @@ class FlexTimer:
             timer.wait(amount)
         return timer.end(return_type=return_type)
 
+    @classmethod
+    @_ty.overload
+    def test_delay_ms(cls, amount_ms: _TimeType, return_type: _ty.Literal["timedelta"]) -> _timedelta: ...
+    @classmethod
+    @_ty.overload
+    def test_delay_ms(cls, amount_ms: _TimeType, return_type: _ty.Literal["PreciseTimeDelta"]) -> PreciseTimeDelta: ...
     @classmethod
     def test_delay_ms(
         cls,
