@@ -1,3 +1,5 @@
+import os
+
 import importlib
 import types
 
@@ -26,24 +28,27 @@ def cli_module(monkeypatch):
 def test_change_working_dir_to_script_location_non_frozen(cli_module, monkeypatch):
     changed = []
 
+    dir_path: str = "/tmp/app" if os.name != "nt" else r"C:\temp\app"
+
     class Frame:
-        f_back = types.SimpleNamespace(f_globals={"__file__": "/tmp/app/main.py"})
+        f_back = types.SimpleNamespace(f_globals={"__file__": os.path.join(dir_path, "main.py")})
 
     monkeypatch.setattr(cli_module.inspect, "currentframe", lambda: Frame())
     monkeypatch.setattr(cli_module.os, "chdir", lambda p: changed.append(p))
 
     cli_module._change_working_dir_to_script_location()
-    assert changed[-1].endswith("/tmp/app")
+    assert changed[-1].endswith(dir_path)
 
 
 def test_change_working_dir_to_script_location_frozen(cli_module, monkeypatch):
     changed = []
+    dir_path: str = "/tmp/bin" if os.name != "nt" else r"C:\temp\bin"
     monkeypatch.setattr(cli_module.sys, "frozen", True, raising=False)
-    monkeypatch.setattr(cli_module.sys, "executable", "/tmp/bin/chronix")
+    monkeypatch.setattr(cli_module.sys, "executable", os.path.join(dir_path, "chronix"))
     monkeypatch.setattr(cli_module.os, "chdir", lambda p: changed.append(p))
 
     cli_module._change_working_dir_to_script_location()
-    assert changed[-1].endswith("/tmp/bin")
+    assert changed[-1].endswith(dir_path)
 
 
 def test_change_working_dir_to_script_location_errors(cli_module, monkeypatch):
